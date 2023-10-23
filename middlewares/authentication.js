@@ -1,16 +1,21 @@
 const {verifyToken} = require('../helpers/jwt')
 
 function authentication(req, res, next) {
-    const token = req.headers['x-access-token']
+    const token = req.get('authorization')
     if (!token) {
-        return res.status(403).json({message: 'No token provided'})
-    }
+        return res.status(401).json({
+            message: 'Unauthorized: no token provided'
+        })
+    } 
     try {
-        const decoded = verifyToken(token)
-        req.user = decoded
+        const userDecoded = verifyToken(token)
+        req.user = userDecoded
         next()
-    } catch (err) {
-        return res.status(401).json({message: 'Unauthorized'})
+    }
+    catch (err) {
+        return res.status(401).json({
+            message: 'Unauthorized: invalid token'
+        })
     }
 }
 
