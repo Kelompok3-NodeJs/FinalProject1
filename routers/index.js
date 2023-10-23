@@ -21,4 +21,5 @@ router.use(authentication)
 router.get('/api/v1/reflections', reflectionController.getAll)
 router.post('/api/v1/reflections', reflectionController.create)
 router.put('/api/v1/reflections/:id', reflectionController.editReflection);
+router.delete('/api/v1/reflections/:id', reflectionController.deleteReflection);
 module.exports = router

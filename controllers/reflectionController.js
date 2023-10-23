@@ -85,6 +85,33 @@ static editReflection(req, res) {
     }
 }
 
+static deleteReflection(req, res) {
+    try {
+      const userId = req.user.id;
+      const reflectionId = req.params.id;
+
+      // Hapus "reflection" dari database
+      const sql = `
+        DELETE FROM reflections
+        WHERE id = $1 AND user_id = $2
+      `;
+
+      const values = [reflectionId, userId];
+
+      pool.query(sql, values)
+        .then(() => {
+          res.status(200).json({ message: 'Success delete' });
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(500).json(err);
+        });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json(error);
+    }
+  }
+
 }
 
 module.exports = reflectionController
