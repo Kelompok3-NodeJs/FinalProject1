@@ -20,4 +20,5 @@ router.post('/api/v1/users/login', userController.login)
 router.use(authentication)
 router.get('/api/v1/reflections', reflectionController.getAll)
 router.post('/api/v1/reflections', reflectionController.create)
+router.put('/api/v1/reflections/:id', reflectionController.editReflection);
 module.exports = router
