@@ -51,6 +51,67 @@ static create(req, res){
        
     }
 }
+
+static editReflection(req, res) {
+    try {
+        const userId = req.user.id;
+        const reflectionId = req.params.id;
+        const { success, low_point, take_away } = req.body;
+
+        const sql = `
+            UPDATE reflections
+            SET success = $1, low_point = $2, take_away = $3
+            WHERE id = $4 AND user_id = $5
+            RETURNING *
+        `;
+
+        const values = [success, low_point, take_away, reflectionId, userId];
+
+        pool.query(sql, values)
+            .then(data => {
+                if (data.rows.length === 0) {
+                    return res.status(404).json({ message: 'Reflection not found' });
+                }
+                res.status(200).json(data.rows[0]);
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(401).json({
+                    message: 'Unauthorized'
+                });
+            });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
+}
+
+static deleteReflection(req, res) {
+    try {
+      const userId = req.user.id;
+      const reflectionId = req.params.id;
+      const sql = `
+        DELETE FROM reflections
+        WHERE id = $1 AND user_id = $2
+      `;
+
+      const values = [reflectionId, userId];
+
+      pool.query(sql, values)
+        .then(() => {
+          res.status(200).json({ message: 'Success delete' });
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(401).json({
+            message: 'Unauthorized'
+          });
+        });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json(error);
+    }
+  }
 }
 
 module.exports = reflectionController
