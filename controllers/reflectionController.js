@@ -77,7 +77,9 @@ static editReflection(req, res) {
             })
             .catch(err => {
                 console.log(err);
-                res.status(500).json(err);
+                res.status(401).json({
+                    message: 'Unauthorized'
+                });
             });
     } catch (error) {
         console.log(error);
@@ -104,14 +106,15 @@ static deleteReflection(req, res) {
         })
         .catch(err => {
           console.log(err);
-          res.status(500).json(err);
+          res.status(401).json({
+            message: 'Unauthorized'
+          });
         });
     } catch (error) {
       console.log(error);
       res.status(500).json(error);
     }
   }
-
 }
 
 module.exports = reflectionController
